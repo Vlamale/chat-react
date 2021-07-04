@@ -1,3 +1,7 @@
+# Real-time chat web application
+
+If you want to use this app go to this domain: [https://real-time-chat-react-bbbfb.firebaseapp.com/chat](https://real-time-chat-react-bbbfb.firebaseapp.com/chat)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
