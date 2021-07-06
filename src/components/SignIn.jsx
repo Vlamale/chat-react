@@ -10,8 +10,7 @@ export default function SignIn() {
         <div className="sing-in-up__form">
             <NavLink to="/"><button type="button" className="btn btn-info sign-btn">Sign up</button></NavLink>
             <form className="form-horizontal login-form" onSubmit={signInFunc}>
-                <div className="form-group">
-                    <label htmlFor="inputEmail3" className="col-sm-2 control-label">Email</label>
+                <div className="form-group login-inputs">
                     <div className="col-sm-10">
                         <input
                             type="email"
@@ -23,8 +22,7 @@ export default function SignIn() {
                         />
                     </div>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="inputPassword3" className="col-sm-2 control-label">Password</label>
+                <div className="form-group login-inputs">
                     <div className="col-sm-10">
                         <input
                             type="password"

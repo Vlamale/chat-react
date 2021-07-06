@@ -2,28 +2,28 @@ import React, { useState } from "react"
 import Auth from "./components/Auth"
 import { BrowserRouter } from 'react-router-dom'
 import AppContext from './context/appContext'
+import { getDataFromStorage } from "./utils"
 
 function App() {
-  const [loginData, setLoginData] = useState({
-    email: '',
+
+  const [userData, setUserData] = useState({
+    email: getDataFromStorage('userStorageData', 'email') || '',
     password: '',
-    hasAccount: false,
-    messages: [],
-    isYourMessage: false,
+    hasAccount: getDataFromStorage('userStorageData', 'hasAccount') || false,
     showAlert: false,
     alertMessage: '',
-    loading: false,
+    displayName: getDataFromStorage('userStorageData', 'displayName') || 'user'
   })
 
   return (
     <BrowserRouter>
-    <AppContext.Provider value={{ loginData, setLoginData }}>
-      
+      <AppContext.Provider value={{ userData, setUserData }}>
+
         <div className="container">
-            <Auth />
+          <Auth />
         </div>
-      
-    </AppContext.Provider>
+
+      </AppContext.Provider>
     </BrowserRouter>
   );
 }

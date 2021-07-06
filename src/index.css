@@ -93,7 +93,6 @@ p {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   overflow-y: auto;
-  scroll-margin-bottom: 0;
 }
 
 .message-form {
@@ -115,10 +114,12 @@ p {
   padding: 5px;
   font-size: 14px;
   word-wrap: break-word;
+  max-width: -webkit-fill-available;
 }
 
 .message-title {
   font-size: 13px;
+  display: block;
 }
 
 .message-time {
@@ -180,6 +181,10 @@ p {
   border-radius: 5px;
   border-top-left-radius: 0;
   text-align: -webkit-center;
+}
+
+.login-inputs {
+  margin-top: 18px;
 }
 
 .btn:hover {

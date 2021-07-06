@@ -4,24 +4,26 @@ import { ChatPlace } from "./ChatPlace"
 import { SendForm } from "./SendForm"
 import ChatContext from "../context/chatContext"
 import AppContext from '../context/appContext'
-import { NavLink } from "react-router-dom"
 
 
 export function Chat() {
     const [value, setValue] = React.useState('')
-    
-    const {loginData, setLoginData} = useContext(AppContext)
+
+    const { userData, setUserData } = useContext(AppContext)
 
     function closeChat() {
-        setLoginData({
-            ...loginData,
-            hasAccount: false
+        setUserData({
+            ...userData,
+            email: '',
+            hasAccount: false,
         })
+
+        localStorage.setItem('userStorageData', JSON.stringify({ email: '', hasAccount: false, displayName: '' }))
     }
-    
+
 
     return (
-        <ChatContext.Provider value={{setValue, value, loginData, closeChat}}>
+        <ChatContext.Provider value={{ setValue, value, userData, closeChat }}>
             <div className="chat">
                 <ChatHeader />
                 <ChatPlace />

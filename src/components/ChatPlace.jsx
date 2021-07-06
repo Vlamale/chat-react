@@ -8,22 +8,35 @@ export const ChatPlace = () => {
     const [messages, setMessages] = React.useState([])
     const [loading, setLoading] = React.useState(false)
 
-    const { loginData } = React.useContext(ChatContext)
+    const { userData } = React.useContext(ChatContext)
     const fakeDivRef = React.createRef()
     const db = firebase.database()
     const messagesFromDB = db.ref('messages')
-    
+
     useEffect(() => {
-        setLoading(true)
-        messagesFromDB.on('value', elem => {
-            if (!elem.val()) {
-                messagesFromDB.push('create')
-                return
+
+        let cleanupFunction = false;
+        const getMessages = async () => {
+            try {
+                setLoading(true)
+                await messagesFromDB.on('value', elem => {
+                    if (!elem.val()) {
+                        messagesFromDB.push('create')
+                        return
+                    }
+                    if (!cleanupFunction) {
+                        setMessages(Object.entries(elem.val()))
+                        setLoading(false)
+                    }
+                })
             }
-            setMessages(Object.entries(elem.val()))
-            setLoading(false)
-        })
-        
+            catch (e) {
+                console.error(e)
+            }
+        }
+        getMessages()
+
+        return () => cleanupFunction = true
     }, [])
 
     useEffect(() => {
@@ -37,7 +50,7 @@ export const ChatPlace = () => {
                 if (message === 'create') {
                     return
                 }
-                const isYourMessage = loginData.email === message[0]
+                const isYourMessage = userData.email === message[0]
                 return (
                     <div
                         className="message-form"

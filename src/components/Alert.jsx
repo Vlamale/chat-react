@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Alert({message}) {
+export default function Alert({ message }) {
 
     return (
         <div className="alert alert-primary d-flex align-items-center" role="alert">
