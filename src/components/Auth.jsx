@@ -7,69 +7,82 @@ import SignIn from './SignIn'
 import SignUp from './SignUp'
 import { Chat } from "./Chat";
 import Alert from './Alert'
+import { showAlert, validFormData, storage } from '../utils'
 
 export default function Login() {
 
-    const { setLoginData, loginData } = useContext(AppContext)
-
-    function showAlert(message, delay) {
-        setLoginData({
-            ...loginData,
-            showAlert: true,
-            alertMessage: message
-        })
-        setTimeout(() => {
-            setLoginData({
-                ...loginData,
-                showAlert: false
-            })
-        }, delay)
-    }
+    const { setUserData, userData } = useContext(AppContext)
 
     function changeInput({ target }) {
         const key = target.getAttribute('data-id')
-        setLoginData({
-            ...loginData,
+        setUserData({
+            ...userData,
             [key]: target.value
         })
     }
 
     function signUpFunc(event) {
         event.preventDefault()
-        const { email, password } = loginData
+        const { email, password, displayName } = userData
+
+        const formData = {
+            email, password, displayName
+        }
+
+        const formDoesNotValid = validFormData(formData)
+        if (formDoesNotValid) {
+            return showAlert(formDoesNotValid.message, formDoesNotValid.delay, userData, setUserData)
+        }
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(result => {
+                return result.user.updateProfile({
+                    displayName
+                })
+            })
             .then(() => {
-                setLoginData({
-                    ...loginData,
+                const userStorageData = {
+                    email,
+                    displayName,
+                    hasAccount: true,
+                }
+                storage('userStorageData', userStorageData)
+                setUserData({
+                    ...userData,
                     hasAccount: true,
                 })
             })
-            .catch(error => showAlert(error.message, 2500))
+            .catch(error => showAlert(error.message, 3000, userData, setUserData))
     }
 
     function signInFunc(event) {
         event.preventDefault()
-        const { email, password } = loginData
+        const { email, password } = userData
 
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
-                setLoginData({
-                    ...loginData,
+                const user = firebase.auth().currentUser
+                const userStorageData = {
+                    email,
                     hasAccount: true,
+                    displayName: user.displayName || 'user'
+                }
+                storage('userStorageData', userStorageData)
+                setUserData({
+                    ...userData,
+                    hasAccount: true,
+                    displayName: user.displayName || 'user',
                 })
             })
-            .catch(error => {
-                showAlert(error.message, 2500)
-            })
+            .catch(error => showAlert(error.message, 3000, userData, setUserData))
     }
 
     return (
         <BrowserRouter>
             <AuthContext.Provider value={{ changeInput, signUpFunc, signInFunc }}>
-                {loginData.showAlert 
-                && <Alert message={loginData.alertMessage}/>}
-                {!loginData.hasAccount
+                {userData.showAlert
+                    && <Alert message={userData.alertMessage} />}
+                {!userData.hasAccount
                     ? (<Switch>
                         <Route path="/" component={SignUp} exact />
                         <Route path="/sign-in" component={SignIn} />

@@ -4,7 +4,7 @@ import firebase from 'firebase'
 
 export const SendForm = () => {
 
-    const { setValue, value, loginData } = React.useContext(ChatContext)
+    const { setValue, value, userData } = React.useContext(ChatContext)
 
     function sendMessage(e) {
         e.preventDefault()
@@ -14,7 +14,7 @@ export const SendForm = () => {
         }
 
         const db = firebase.database()
-        db.ref('messages').push([loginData.email, value, new Date().toLocaleTimeString()])
+        db.ref('messages').push([userData.email, userData.displayName, value, new Date().toLocaleTimeString()])
         setValue('')
     }
 
