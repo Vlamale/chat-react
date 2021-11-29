@@ -16,25 +16,26 @@ export const ChatPlace = () => {
     useEffect(() => {
 
         let cleanupFunction = false;
-        const getMessages = async () => {
-            try {
-                setLoading(true)
-                await messagesFromDB.on('value', elem => {
-                    if (!elem.val()) {
-                        messagesFromDB.push('create')
-                        return
-                    }
-                    if (!cleanupFunction) {
+
+        if (!cleanupFunction) {
+            (async function () {
+                try {
+                    setLoading(true)
+                    await messagesFromDB.on('value', elem => {
+                        if (!elem.val()) {
+                            messagesFromDB.push('create')
+                            return
+                        }
                         setMessages(Object.entries(elem.val()))
                         setLoading(false)
-                    }
-                })
-            }
-            catch (e) {
-                console.error(e)
-            }
+
+                    })
+                }
+                catch (e) {
+                    console.error(e)
+                }
+            })()
         }
-        getMessages()
 
         return () => cleanupFunction = true
     }, [])
